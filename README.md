@@ -4,6 +4,8 @@
 
 QuakeEye is an Earthquake Data Visualization project.
 
+**Link:** https://indigowizard.github.io/QuakeEye/map.html
+
 ## Description
 
 This app visualizes the latest earthquake data from the USGS in real-time.

@@ -25,7 +25,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_53cff9e8692968f89f6ed2450a553fcc {
+                #map_598ad1bb14c43e3ce34c8e8f2771326d {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -39,14 +39,14 @@
 <body>
     
     
-            <div class="folium-map" id="map_53cff9e8692968f89f6ed2450a553fcc" ></div>
+            <div class="folium-map" id="map_598ad1bb14c43e3ce34c8e8f2771326d" ></div>
         
 </body>
 <script>
     
     
-            var map_53cff9e8692968f89f6ed2450a553fcc = L.map(
-                "map_53cff9e8692968f89f6ed2450a553fcc",
+            var map_598ad1bb14c43e3ce34c8e8f2771326d = L.map(
+                "map_598ad1bb14c43e3ce34c8e8f2771326d",
                 {
                     center: [36.5, 37.5],
                     crs: L.CRS.EPSG3857,
@@ -60,10 +60,16 @@
 
         
     
-            var tile_layer_c021f8cba933ace7a7fa28b6d66defb1 = L.tileLayer(
+            var tile_layer_fecdf19cc2fcce20a9406fa574e44960 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca target=\"_blank\" href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca target=\"_blank\" href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca target=\"_blank\" href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_598ad1bb14c43e3ce34c8e8f2771326d);
+        
+    
+            var tile_layer_03c7ba75525da73e10873c1c42282856 = L.tileLayer(
                 "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {"attribution": "Data by \u0026copy; \u003ca target=\"_blank\" href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca target=\"_blank\" href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
-            ).addTo(map_53cff9e8692968f89f6ed2450a553fcc);
+            ).addTo(map_598ad1bb14c43e3ce34c8e8f2771326d);
         
 </script>
 </html>
