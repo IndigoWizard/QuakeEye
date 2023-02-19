@@ -5,7 +5,7 @@ from datetime import datetime
 import webbrowser
 
 # Earthquake data GeoJSON URL:
-url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"
+url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 # opting for weekly results to test the api for now
 
 
@@ -43,14 +43,17 @@ colors = {0.2: '#0f0b75', 0.45: '#9e189c', 0.75: '#ed7c50', 1: '#f4ee27'}
 heatmap = HeatMap(data=coords, gradient=colors, name="Earthquake distribution").add_to(m)
 
 # Earthquake Marker layers
+# Making a main earthquake layers group to enable/disable all the layers at once from the defaul layer panel
+main_layer = folium.FeatureGroup("Earthquakes Location").add_to(m)
+
 # Earthquakes are split into categories based on their magnitudes
-micro_layer = folium.FeatureGroup(name="Micro: Less than 2.9").add_to(m)
-minor_layer = folium.FeatureGroup(name="Minor: 3.0 - 3.9").add_to(m)
-light_layer = folium.FeatureGroup(name="Light: 4.0 - 4.9").add_to(m)
-moderate_layer = folium.FeatureGroup(name="Moderate: 5.0 - 5.9").add_to(m)
-strong_layer = folium.FeatureGroup(name="Strong: 6.0 - 6.9").add_to(m)
-major_layer = folium.FeatureGroup(name="Major: 7.0 - 7.9").add_to(m)
-great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(m)
+micro_layer = folium.FeatureGroup(name="Micro: Less than 2.9").add_to(main_layer)
+minor_layer = folium.FeatureGroup(name="Minor: 3.0 - 3.9").add_to(main_layer)
+light_layer = folium.FeatureGroup(name="Light: 4.0 - 4.9").add_to(main_layer)
+moderate_layer = folium.FeatureGroup(name="Moderate: 5.0 - 5.9").add_to(main_layer)
+strong_layer = folium.FeatureGroup(name="Strong: 6.0 - 6.9").add_to(main_layer)
+major_layer = folium.FeatureGroup(name="Major: 7.0 - 7.9").add_to(main_layer)
+great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(main_layer)
 
 # Adding Markers to layers based on earthquake magnitude
 for place, mag, time, lat, lon  in zip(places, magnitudes, times, lats, longs):
