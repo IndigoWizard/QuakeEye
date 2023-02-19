@@ -1,5 +1,6 @@
 import folium
 from folium.plugins import HeatMap
+from folium.plugins import GroupedLayerControl
 import requests
 from datetime import datetime
 import webbrowser
@@ -80,9 +81,18 @@ for place, mag, time, lat, lon  in zip(places, magnitudes, times, lats, longs):
         folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="black")).add_to(great_layer)
     
 
-
 # Adding the layer control
 folium.LayerControl(collapsed=False).add_to(m)
+
+# Ctreating multiple magnitude layers based on Richter classification
+# Using GroupedLayerControl to stack the new layers under a one category and make them individually interactive
+GroupedLayerControl(
+    groups={
+    "Magnitude Categories": [micro_layer, minor_layer, light_layer, moderate_layer, strong_layer, major_layer, great_layer]
+    },
+    exclusive_groups=True,
+    collapsed=False
+).add_to(m)
 
 m.save("map.html")
 webbrowser.open("map.html")
