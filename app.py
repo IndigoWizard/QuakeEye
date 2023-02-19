@@ -90,7 +90,7 @@ GroupedLayerControl(
     groups={
     "Magnitude Categories": [micro_layer, minor_layer, light_layer, moderate_layer, strong_layer, major_layer, great_layer]
     },
-    exclusive_groups=True,
+    exclusive_groups=False,
     collapsed=False
 ).add_to(m)
 
