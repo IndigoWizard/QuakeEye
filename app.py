@@ -20,9 +20,10 @@ except requests.exceptions.RequestException as expt:
 
 # Extracting main information (location (latitde & longitude), magnitude)
 
+places = [feature["properties"]["place"] for feature in data ["features"]]
+magnitudes = [feature["properties"]["mag"] for feature in data ["features"]]
 longs = [feature["geometry"]["coordinates"][0] for feature in data ["features"]]
 lats = [feature["geometry"]["coordinates"][1] for feature in data ["features"]]
-magnitudes = [feature["properties"]["mag"] for feature in data ["features"]]
 
 # Making a coordinates list
 coords = [[lat, lon, mag] for lat, lon, mag in zip(lats, longs, magnitudes)]
@@ -51,10 +52,10 @@ major_layer = folium.FeatureGroup(name="Major: 7.0 - 7.9").add_to(m)
 great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(m)
 
 # Adding Markers to layers based on earthquake magnitude
-for lat, lon, mag in zip(lats, longs, magnitudes):
+for place, lat, lon, mag in zip(places, lats, longs, magnitudes):
     
     # Configure data display in popups when clicking on markers
-    popup_info = f"<b>Magnitude:</b> {mag}<br><b>Coordinates:</b> {lat}, {lon}"
+    popup_info = f"<h5><b>Earthquake Information</b></h5><b>Magnitude:</b> {mag}<br><b>Location:</b> {place}<br><b>Coordinates:</b> {lat} , {lon}"
 
     if mag <= 2.9:
         folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="lightgreen")).add_to(micro_layer)
