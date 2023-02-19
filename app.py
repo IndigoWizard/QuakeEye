@@ -1,10 +1,11 @@
 import folium
 from folium.plugins import HeatMap
 import requests
+from datetime import datetime
 import webbrowser
 
 # Earthquake data GeoJSON URL:
-url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"
 # opting for weekly results to test the api for now
 
 
@@ -19,9 +20,9 @@ except requests.exceptions.RequestException as expt:
     exit(1)
 
 # Extracting main information (location (latitde & longitude), magnitude)
-
 places = [feature["properties"]["place"] for feature in data ["features"]]
 magnitudes = [feature["properties"]["mag"] for feature in data ["features"]]
+times = [feature["properties"]["time"] for feature in data ["features"]] 
 longs = [feature["geometry"]["coordinates"][0] for feature in data ["features"]]
 lats = [feature["geometry"]["coordinates"][1] for feature in data ["features"]]
 
@@ -52,10 +53,13 @@ major_layer = folium.FeatureGroup(name="Major: 7.0 - 7.9").add_to(m)
 great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(m)
 
 # Adding Markers to layers based on earthquake magnitude
-for place, lat, lon, mag in zip(places, lats, longs, magnitudes):
+for place, mag, time, lat, lon  in zip(places, magnitudes, times, lats, longs):
     
+    # converting API earthquake time info from unix time to human-readable time format
+    time_date = datetime.fromtimestamp(time/1000.0).strftime("%Y-%m-%d") 
+    time_hour = datetime.fromtimestamp(time/1000.0).strftime("%H:%M:%S") 
     # Configure data display in popups when clicking on markers
-    popup_info = f"<h5><b>Earthquake Information</b></h5><b>Magnitude:</b> {mag}<br><b>Location:</b> {place}<br><b>Coordinates:</b> {lat} , {lon}"
+    popup_info = f"<h5><b>Earthquake Information</b></h5><b>Magnitude:</b> {mag}<br><b>Date:</b> {time_date}<br><b>Time:</b> {time_hour}<br><b>Location:</b> {place}<br><b>Coordinates:</b> {lat} , {lon}"
 
     if mag <= 2.9:
         folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="lightgreen")).add_to(micro_layer)
