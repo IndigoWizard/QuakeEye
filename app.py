@@ -1,11 +1,13 @@
 import folium
 from folium.plugins import HeatMap
+from folium.plugins import GroupedLayerControl
+from branca.element import Template, MacroElement
 import requests
 from datetime import datetime
 import webbrowser
 
 # Earthquake data GeoJSON URL:
-url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"
+url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 # opting for weekly results to test the api for now
 
 
@@ -40,17 +42,60 @@ basemap1 = folium.TileLayer("openstreetmap", name="Open Street Map").add_to(m)
 colors = {0.2: '#0f0b75', 0.45: '#9e189c', 0.75: '#ed7c50', 1: '#f4ee27'}
 
 # Adding the folium heatmap layer using the HeatMap plugin
-heatmap = HeatMap(data=coords, gradient=colors, name="Earthquake distribution").add_to(m)
+heatmap = HeatMap(data=coords, gradient=colors, name="Earthquake Distribution Heatmap").add_to(m)
+
+
 
 # Earthquake Marker layers
+# Making a main earthquake layers group to enable/disable all the layers at once from the defaul layer panel
+main_layer = folium.FeatureGroup("Earthquakes Location").add_to(m)
+
 # Earthquakes are split into categories based on their magnitudes
-micro_layer = folium.FeatureGroup(name="Micro: Less than 2.9").add_to(m)
-minor_layer = folium.FeatureGroup(name="Minor: 3.0 - 3.9").add_to(m)
-light_layer = folium.FeatureGroup(name="Light: 4.0 - 4.9").add_to(m)
-moderate_layer = folium.FeatureGroup(name="Moderate: 5.0 - 5.9").add_to(m)
-strong_layer = folium.FeatureGroup(name="Strong: 6.0 - 6.9").add_to(m)
-major_layer = folium.FeatureGroup(name="Major: 7.0 - 7.9").add_to(m)
-great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(m)
+micro_layer = folium.FeatureGroup(name="Micro: Less than 2.9").add_to(main_layer)
+minor_layer = folium.FeatureGroup(name="Minor: 3.0 - 3.9").add_to(main_layer)
+light_layer = folium.FeatureGroup(name="Light: 4.0 - 4.9").add_to(main_layer)
+moderate_layer = folium.FeatureGroup(name="Moderate: 5.0 - 5.9").add_to(main_layer)
+strong_layer = folium.FeatureGroup(name="Strong: 6.0 - 6.9").add_to(main_layer)
+major_layer = folium.FeatureGroup(name="Major: 7.0 - 7.9").add_to(main_layer)
+great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(main_layer)
+
+# Injecting custom css through branca macro elements and template
+popup_css = """
+{% macro html(this, kwargs) %}
+    <style>
+        .leaflet-popup-content-wrapper{
+            padding: 1px;
+            text-align: left;
+            border: 4px solid #d7a45d;
+            border-radius: 12px;
+        }
+        .leaflet-popup-content{
+            margin: 13px 24px 13px 20px;
+            font-size: 1.2em;
+            line-height: 1.3;
+            min-height: 1px;
+        }
+        .popinfo {
+            width: max-content;
+            border-radius: 5px;
+            font-size
+        }
+        .popinfo h5{
+            text-align: center;
+        }
+        .leaflet-popup-tip{
+            background: #d7a45d !important;
+        }
+    </style>
+
+{% endmacro %}
+"""
+# configuring the style
+style = MacroElement()
+style._template = Template(popup_css)
+
+# Adding style to the map
+m.get_root().add_child(style)
 
 # Adding Markers to layers based on earthquake magnitude
 for place, mag, time, lat, lon  in zip(places, magnitudes, times, lats, longs):
@@ -59,7 +104,7 @@ for place, mag, time, lat, lon  in zip(places, magnitudes, times, lats, longs):
     time_date = datetime.fromtimestamp(time/1000.0).strftime("%Y-%m-%d") 
     time_hour = datetime.fromtimestamp(time/1000.0).strftime("%H:%M:%S") 
     # Configure data display in popups when clicking on markers
-    popup_info = f"<h5><b>Earthquake Information</b></h5><b>Magnitude:</b> {mag}<br><b>Date:</b> {time_date}<br><b>Time:</b> {time_hour}<br><b>Location:</b> {place}<br><b>Coordinates:</b> {lat} , {lon}"
+    popup_info = f"<div class='popinfo'><h5><b>Earthquake Information</b></h5><b>Magnitude:</b> {mag}<br><b>Date:</b> {time_date}<br><b>Time:</b> {time_hour}<br><b>Location:</b> {place}<br><b>Coordinates:</b> {lat} , {lon}</div>"
 
     if mag <= 2.9:
         folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="lightgreen")).add_to(micro_layer)
@@ -77,9 +122,18 @@ for place, mag, time, lat, lon  in zip(places, magnitudes, times, lats, longs):
         folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="black")).add_to(great_layer)
     
 
-
 # Adding the layer control
 folium.LayerControl(collapsed=False).add_to(m)
+
+# Ctreating multiple magnitude layers based on Richter classification
+# Using GroupedLayerControl to stack the new layers under a one category and make them individually interactive
+GroupedLayerControl(
+    groups={
+    "Earthquake Classes by Magnitude": [micro_layer, minor_layer, light_layer, moderate_layer, strong_layer, major_layer, great_layer]
+    },
+    exclusive_groups=False,
+    collapsed=False
+).add_to(m)
 
 m.save("map.html")
 webbrowser.open("map.html")
