@@ -63,11 +63,18 @@ great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(main_laye
 popup_css = """
 {% macro html(this, kwargs) %}
     <style>
+/* Marker PopUp Box CSS */
         .leaflet-popup-content-wrapper{
             padding: 1px;
             text-align: left;
             border: 4px solid #d7a45d;
             border-radius: 12px;
+            /*GLASSMORPHISM EFFECT*/
+            background: rgba( 28, 25, 56, 0.25 );
+            box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+            backdrop-filter: blur( 4px );
+            -webkit-backdrop-filter: blur( 4px );
+            border: 4px solid rgba( 215, 164, 93, 0.2 );
         }
         .leaflet-popup-content{
             margin: 13px 24px 13px 20px;
@@ -78,13 +85,35 @@ popup_css = """
         .popinfo {
             width: max-content;
             border-radius: 5px;
-            font-size
+            color: darkslategray;
         }
         .popinfo h5{
             text-align: center;
         }
         .leaflet-popup-tip{
             background: #d7a45d !important;
+        }
+
+/* Layer Control Panel CSS */
+
+        .leaflet-control-layers-list {
+            width: 14vw;
+            min-width: 130px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .leaflet-control-layers form {
+            z-index: 10000;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .leaflet-control-layers-group-label{
+            padding: 2px;
+            margin: 2px;
+            background-color: #d75d5d;
+            border: 1px dashed black;
+            border-radius: 4px;
+            text-align: center;
         }
     </style>
 
