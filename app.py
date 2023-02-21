@@ -7,7 +7,7 @@ from datetime import datetime
 import webbrowser
 
 # Earthquake data GeoJSON URL:
-url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson"
 # opting for weekly results to test the api for now
 
 
@@ -51,8 +51,8 @@ heatmap = HeatMap(data=coords, gradient=colors, name="Earthquake Distribution He
 main_layer = folium.FeatureGroup("Earthquakes Location").add_to(m)
 
 # Earthquakes are split into categories based on their magnitudes
-micro_layer = folium.FeatureGroup(name="Micro: Less than 2.9").add_to(main_layer)
-minor_layer = folium.FeatureGroup(name="Minor: 3.0 - 3.9").add_to(main_layer)
+# micro_layer = folium.FeatureGroup(name="Micro: Less than 2.9").add_to(main_layer)
+minor_layer = folium.FeatureGroup(name="Minor: Less than 3.9").add_to(main_layer)
 light_layer = folium.FeatureGroup(name="Light: 4.0 - 4.9").add_to(main_layer)
 moderate_layer = folium.FeatureGroup(name="Moderate: 5.0 - 5.9").add_to(main_layer)
 strong_layer = folium.FeatureGroup(name="Strong: 6.0 - 6.9").add_to(main_layer)
@@ -85,14 +85,23 @@ popup_css = """
         .popinfo {
             width: max-content;
             border-radius: 5px;
-            color: darkslategray;
+            color: #9d3a00;
         }
         .popinfo h5{
             text-align: center;
         }
+        .popinfo span{
+            font-weight: 200;
+        }
+        .popinfo b{
+            font-weight: 800;
+            font-family: bariol;
+            font-size: 18px;
+        }
         .leaflet-popup-tip{
             background: #d7a45d !important;
         }
+        .span
 
 /* Layer Control Panel CSS */
 
@@ -132,12 +141,12 @@ for place, mag, time, lat, lon  in zip(places, magnitudes, times, lats, longs):
     # converting API earthquake time info from unix time to human-readable time format
     time_date = datetime.fromtimestamp(time/1000.0).strftime("%Y-%m-%d") 
     time_hour = datetime.fromtimestamp(time/1000.0).strftime("%H:%M:%S") 
-    # Configure data display in popups when clicking on markers
-    popup_info = f"<div class='popinfo'><h5><b>Earthquake Information</b></h5><b>Magnitude:</b> {mag}<br><b>Date:</b> {time_date}<br><b>Time:</b> {time_hour}<br><b>Location:</b> {place}<br><b>Coordinates:</b> {lat} , {lon}</div>"
+    # Configure data display in popups when clicking on markers <span></span>
+    popup_info = f"<div class='popinfo'><h5><b>Earthquake Information</b></h5><b>Magnitude:</b> <span>{mag}</span><br><b>Date:</b> <span>{time_date}</span><br><b>Time:</b> <span>{time_hour}</span><br><b>Location:</b> <span>{place}</span><br><b>Coordinates:</b> <span>{lat} , {lon}</span></div>"
 
-    if mag <= 2.9:
-        folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="lightgreen")).add_to(micro_layer)
-    elif mag <= 3.9:
+    if mag <= 3.9: #2.9:
+        # folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="lightgreen")).add_to(micro_layer)
+    # elif mag <= 3.9:
         folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="beige")).add_to(minor_layer)
     elif mag <= 4.9:
         folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="orange")).add_to(light_layer)
@@ -158,7 +167,7 @@ folium.LayerControl(collapsed=False).add_to(m)
 # Using GroupedLayerControl to stack the new layers under a one category and make them individually interactive
 GroupedLayerControl(
     groups={
-    "Earthquake Classes by Magnitude": [micro_layer, minor_layer, light_layer, moderate_layer, strong_layer, major_layer, great_layer]
+    "Earthquake Classes by Magnitude": [minor_layer, light_layer, moderate_layer, strong_layer, major_layer, great_layer]
     },
     exclusive_groups=False,
     collapsed=False
