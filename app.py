@@ -13,9 +13,9 @@ url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojs
 
 # Getting the earthquake data
 try:
-    responnse = requests.get(url)
-    responnse.raise_for_status()
-    data = responnse.json()
+    response = requests.get(url)
+    response.raise_for_status()
+    data = response.json()
 except requests.exceptions.RequestException as expt:
     print("Error: Could not retrieve data from API")
     print("details: ", expt)
@@ -85,23 +85,23 @@ popup_css = """
         .popinfo {
             width: max-content;
             border-radius: 5px;
-            color: #9d3a00;
+            color: #993200;
         }
         .popinfo h5{
             text-align: center;
         }
         .popinfo span{
-            font-weight: 200;
+            font-weight: bold;
+            color: #9d3a00;
         }
         .popinfo b{
             font-weight: 800;
             font-family: bariol;
-            font-size: 18px;
+            font-size: 1.4em;
         }
         .leaflet-popup-tip{
             background: #d7a45d !important;
         }
-        .span
 
 /* Layer Control Panel CSS */
 
