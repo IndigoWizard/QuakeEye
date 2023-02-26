@@ -59,7 +59,7 @@ great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(main_laye
 popup_css = """
 {% macro html(this, kwargs) %}
     <head>
-        <title>QuakeEye - Earthquake Data Visualization</title>
+        <title>QuakeEye - Real-Time Earthquake Data Visualization by Ahmed I. Mokhtari</title>
         
         <!-- Global Meta Tags -->
         <meta itemprop="image" content="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif">
@@ -70,10 +70,10 @@ popup_css = """
         <link rel="stylesheet" href="style.css">
 
         <!-- LinkediI Meta Tags -->
-        <meta property='og:url' content='https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif'/>
-        <meta property='og:title' content='QuakeEye - Real-Time Earthquake Data Visualization by Ahmed I. Mokhtari'/>
-        <meta property='og:description' content='QuakeEye - Real-Time Earthquake Data Visualization by Ahmed I. Mokhtari'/>
-        <meta property='og:image' content='https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif'/>
+        <meta property="og:url" content="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif"/>
+        <meta property="og:title" content="QuakeEye - Real-Time Earthquake Data Visualization by Ahmed I. Mokhtari"/>
+        <meta property="og:description" content="QuakeEye - Real-Time Earthquake Data Visualization by Ahmed I. Mokhtari"/>
+        <meta property="og:image" content="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif"/>
 
         <!-- Facebook Meta Tags -->
         <meta property="og:url" content="https://indigowizard.github.io/QuakeEye/map.html">
