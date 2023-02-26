@@ -1,3 +1,4 @@
+import streamlit as st
 import folium
 from folium.plugins import HeatMap
 from folium.plugins import GroupedLayerControl
@@ -15,9 +16,59 @@ try:
     response.raise_for_status()
     data = response.json()
 except requests.exceptions.RequestException as expt:
-    print("Error: Could not retrieve data from API")
-    print("details: ", expt)
-    exit(1)
+    st.error("Error: Could not retrieve data from API")
+    st.error("details: ", +str(expt))
+    st.stop()
+
+st.set_page_config(
+    page_title="QuakeEye",
+    page_icon="https://cdn-icons-png.flaticon.com/512/2377/2377860.png",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+    'Get help': "https://github.com/IndigoWizard/QuakeEye",
+    'Report a bug': "https://github.com/IndigoWizard/QuakeEye/issues",
+    'About': "# This is a header. This is an *extremely* cool app!"
+    }
+)
+
+# Set the sidebar width
+st.markdown(
+    """
+    <style>
+    .sidebar .sidebar-content {
+        width: 200px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Add sidebar items
+st.sidebar.markdown("# Sidebar Menu")
+st.sidebar.markdown("Check out my GitHub and LinkedIn profiles:")
+st.sidebar.markdown(
+    "[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/your-username)")
+st.sidebar.markdown(
+    "[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/your-username/)")
+
+# Add a link to the USGS website
+st.sidebar.markdown("[USGS website](https://www.usgs.gov/)")
+
+# Add some content to the main page
+st.title("My Project")
+st.write("Here's some information about my project...")
+
+st.header("QuakeEye Project")
+
+# Add a title to your Streamlit app
+st.title("Earthquake Data Visualization")
+
+# Add a description of your Streamlit app
+st.write("This app visualizes the latest earthquake data from the USGS in real-time. The app retrieves earthquake data from the USGS API and displays the data on a map using the Folium library.")
+st.write("Users can filter and explore earthquake data by magnitude, location, and time range.")
+
+st.subheader("Earthquake Map")
 
 # Extracting main information (location (latitde & longitude), magnitude)
 places = [feature["properties"]["place"] for feature in data ["features"]]
@@ -65,7 +116,7 @@ popup_css = """
         <meta itemprop="image" content="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif">
         <meta itemprop="thumbnailUrl" content="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif">
         <link rel="image_src" href="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif">
-        <link rel="shortcut icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/3275/3275509.png">
+        <link rel="shortcut icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/2377/2377860.png">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
         <link rel="stylesheet" href="style.css">
 
@@ -204,6 +255,23 @@ GroupedLayerControl(
     collapsed=False
 ).add_to(m)
 
-# saving the map as html and opening it in default browser
-m.save("map.html")
-webbrowser.open("map.html")
+
+
+
+# Display the map using streamlit-folium
+html_string = m._repr_html_()
+
+# Display the HTML string using Streamlit
+st.components.v1.html(html_string, width=1000, height=600)
+
+c1, c2, c3 = st.columns(3)
+with c1:
+    st.info('**Data Analyst: [@AliTslm](https://twitter.com/AliTslm)**', icon="💡")
+with c2:
+    st.info('**GitHub: [@alitaslimi](https://github.com/alitaslimi)**', icon="💻")
+with c3:
+    st.info('**Data: [Flipside Crypto](https://flipsidecrypto.xyz)**', icon="🧠")
+
+st.markdown(
+    "Check the project source and give it a :star: at [github.com/IndigoWizard/QuakeEye](https://github.com/IndigoWizard/QuakeEye/stargazers)"
+)
