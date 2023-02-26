@@ -16,6 +16,11 @@ This project was developed in the wake of the recent unfortunate events of the e
 
 You can zoom-out for a global view of earthquakes around the globe.
 
+## Preview
+
+![quakeeye_demo_preview](https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif)
+
+
 ## Info
 
 The project is wirrten in Python, it uses Folium library to display visual data and render the map and relies on the USGS API to retrieve real-time data.
