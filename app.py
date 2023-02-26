@@ -8,8 +8,6 @@ import webbrowser
 
 # Earthquake data GeoJSON URL:
 url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson"
-# opting for weekly results to test the api for now
-
 
 # Getting the earthquake data
 try:
@@ -44,8 +42,6 @@ colors = {0.2: '#0f0b75', 0.45: '#9e189c', 0.75: '#ed7c50', 1: '#f4ee27'}
 # Adding the folium heatmap layer using the HeatMap plugin
 heatmap = HeatMap(data=coords, gradient=colors, name="Earthquake Distribution Heatmap").add_to(m)
 
-
-
 # Earthquake Marker layers
 # Making a main earthquake layers group to enable/disable all the layers at once from the defaul layer panel
 main_layer = folium.FeatureGroup("Earthquakes Location").add_to(m)
@@ -62,6 +58,40 @@ great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(main_laye
 # Injecting custom css through branca macro elements and template
 popup_css = """
 {% macro html(this, kwargs) %}
+    <head>
+        <title>QuakeEye - Earthquake Data Visualization</title>
+        
+        <!-- Global Meta Tags -->
+        <meta itemprop="image" content="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif">
+        <meta itemprop="thumbnailUrl" content="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif">
+        <link rel="image_src" href="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif">
+        <link rel="shortcut icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/3275/3275509.png">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+        <link rel="stylesheet" href="style.css">
+
+        <!-- LinkediI Meta Tags -->
+        <meta property='og:url' content='https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif'/>
+        <meta property='og:title' content='QuakeEye - Real-Time Earthquake Data Visualization by Ahmed I. Mokhtari'/>
+        <meta property='og:description' content='QuakeEye - Real-Time Earthquake Data Visualization by Ahmed I. Mokhtari'/>
+        <meta property='og:image' content='https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif'/>
+
+        <!-- Facebook Meta Tags -->
+        <meta property="og:url" content="https://indigowizard.github.io/QuakeEye/map.html">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="QuakeEye - Real-Time Earthquake Data Visualization by Ahmed I. Mokhtari">
+        <meta property="og:description" content="QuakeEye - Real-Time Earthquake Data Visualization by Ahmed I. Mokhtari">
+        <meta property="og:image" content="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif">
+
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta property="twitter:domain" content="https://indigowizard.github.io/QuakeEye/map.html">
+        <meta property="twitter:url" content="https://indigowizard.github.io/QuakeEye/map.html">
+        <meta name="twitter:title" content="QuakeEye - Real-Time Earthquake Data Visualization by Ahmed I. Mokhtari">
+        <meta name="twitter:description" content="QuakeEye - Real-Time Earthquake Data Visualization by Ahmed I. Mokhtari">
+        <meta name="twitter:image" content="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif">
+
+        <!-- Meta Tags Generated via https://www.opengraph.xyz -->
+    </head>
     <style>
 /* Marker PopUp Box CSS */
         .leaflet-popup-content-wrapper{
@@ -173,5 +203,6 @@ GroupedLayerControl(
     collapsed=False
 ).add_to(m)
 
+# saving the map as html and opening it in default browser
 m.save("map.html")
 webbrowser.open("map.html")
