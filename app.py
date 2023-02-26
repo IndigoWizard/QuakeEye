@@ -92,6 +92,7 @@ popup_css = """
 
         <!-- Meta Tags Generated via https://www.opengraph.xyz -->
     </head>
+    
     <style>
 /* Marker PopUp Box CSS */
         .leaflet-popup-content-wrapper{
