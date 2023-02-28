@@ -32,37 +32,59 @@ st.set_page_config(
     }
 )
 
-# Set the sidebar width
+########### SIDEBAR  MENU ########### 
+# Set up the sidebar
+st.sidebar.title("Navigation")
+
+# Project summary section
+st.sidebar.subheader("Project Summary")
+st.sidebar.success("Real-Time Earthquake Data Visualization App.")
+
+# About section
+st.sidebar.subheader("About me:")
+st.sidebar.caption("Tech & Open Source enthusiast | Geo Environment & Spatial Planning | Remote Sensing & Cartography | Indie Games Dev | House of M.")
+
+# Contact section
+st.sidebar.subheader("Find me at:")
+
+## Define columns in the sidebar
+c1, c2, c3 = st.sidebar.columns([1, 1, 1])
+
+# Display info in the columns
+with c1:
+    st.info("[![LinkedIn](https://static.licdn.com/sc/h/8s162nmbcnfkg7a0k8nq9wwqo)](https://linkedin.com/in/ahmed-islem-mokhtari)")
+with c2:
+    st.info("[![GitHub](https://github.githubassets.com/favicons/favicon-dark.png)](https://github.com/IndigoWizard)")
+with c3:
+    st.info("[![Medium](https://miro.medium.com/1*m-R_BkNf1Qjr1YbyOIJY2w.png)](https://medium.com/@Indigo.Wizard/mt-chenoua-forest-fires-analysis-with-remote-sensing-614681f468e9)")
+
+# App custom CSS
 st.markdown(
     """
     <style>
-    .sidebar .sidebar-content {
-        width: 200px;
+    /*Main app page*/
+    .css-k1ih3n{
+        padding: 2rem 1rem 5rem;
+    }
+    /*Sidebar*/
+    .css-1vencpc {
+        width: 20vw !important;
+    }
+    .css-1vq4p4l{
+        padding: 1rem;
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Add sidebar items
-st.sidebar.markdown("# Sidebar Menu")
-st.sidebar.markdown("Check out my GitHub and LinkedIn profiles:")
-st.sidebar.markdown(
-    "[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/your-username)")
-st.sidebar.markdown(
-    "[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/your-username/)")
+########### MAIN PAGE CONTENT ###########
+# App title
+st.title("QuakeEye Project")
 
-# Add a link to the USGS website
-st.sidebar.markdown("[USGS website](https://www.usgs.gov/)")
-
-# Add some content to the main page
-st.title("My Project")
-st.write("Here's some information about my project...")
-
-st.header("QuakeEye Project")
-
+st.write("ʕ •ᴥ•ʔ : Dont forget to star ⭐ this project on [GitHub.com/IndigoWizard/QuakeEye](https://github.com/IndigoWizard/QuakeEye/stargazers)")
 # Add a title to your Streamlit app
-st.title("Earthquake Data Visualization")
+st.header("Earthquake Data Visualization")
 
 # Add a description of your Streamlit app
 st.write("This app visualizes the latest earthquake data from the USGS in real-time. The app retrieves earthquake data from the USGS API and displays the data on a map using the Folium library.")
@@ -70,6 +92,7 @@ st.write("Users can filter and explore earthquake data by magnitude, location, a
 
 st.subheader("Earthquake Map")
 
+########### MAIN APP ###########
 # Extracting main information (location (latitde & longitude), magnitude)
 places = [feature["properties"]["place"] for feature in data ["features"]]
 magnitudes = [feature["properties"]["mag"] for feature in data ["features"]]
@@ -107,7 +130,7 @@ major_layer = folium.FeatureGroup(name="Major: 7.0 - 7.9").add_to(main_layer)
 great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(main_layer)
 
 # Injecting custom css through branca macro elements and template
-popup_css = """
+app_css = """
 {% macro html(this, kwargs) %}
     <head>
         <title>QuakeEye - Real-Time Earthquake Data Visualization by Ahmed I. Mokhtari</title>
@@ -212,7 +235,7 @@ popup_css = """
 """
 # configuring the style
 style = MacroElement()
-style._template = Template(popup_css)
+style._template = Template(app_css)
 
 # Adding style to the map
 m.get_root().add_child(style)
@@ -255,23 +278,8 @@ GroupedLayerControl(
     collapsed=False
 ).add_to(m)
 
-
-
-
 # Display the map using streamlit-folium
 html_string = m._repr_html_()
 
 # Display the HTML string using Streamlit
 st.components.v1.html(html_string, width=1000, height=600)
-
-c1, c2, c3 = st.columns(3)
-with c1:
-    st.info('**Data Analyst: [@AliTslm](https://twitter.com/AliTslm)**', icon="💡")
-with c2:
-    st.info('**GitHub: [@alitaslimi](https://github.com/alitaslimi)**', icon="💻")
-with c3:
-    st.info('**Data: [Flipside Crypto](https://flipsidecrypto.xyz)**', icon="🧠")
-
-st.markdown(
-    "Check the project source and give it a :star: at [github.com/IndigoWizard/QuakeEye](https://github.com/IndigoWizard/QuakeEye/stargazers)"
-)
