@@ -1,4 +1,7 @@
 st_css="""
+    <head>
+        <title>QuakeEye - Earthquake Data Visualization</title>
+    </head>
   <style>
   /*Main app page*/
   /* main page
