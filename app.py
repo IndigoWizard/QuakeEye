@@ -65,17 +65,14 @@ st.markdown(appstyle.st_css,unsafe_allow_html=True,)
 
 ########### MAIN PAGE CONTENT ###########
 # App title
-st.title("QuakeEye Project")
-
-st.write("ʕ •ᴥ•ʔ : Dont forget to star ⭐ this project on [GitHub.com/IndigoWizard/QuakeEye](https://github.com/IndigoWizard/QuakeEye/stargazers)")
 # Add a title to your Streamlit app
-st.header("Earthquake Data Visualization")
+st.subheader("QuakeEye - Real-Time Earthquake Data Visualization")
 
 # Add a description of your Streamlit app
 st.write("This app visualizes the latest earthquake data from [USGS](https://www.usgs.gov/) in real-time. The app retrieves earthquake data from the USGS API and displays the data on a map using the [Folium](https://python-visualization.github.io/folium/) library and is deployed using [Streamlit](https://streamlit.io/).")
 st.write("Users can filter and explore earthquake data by magnitude, location and frequency magnitude distribution.")
 
-st.subheader("Earthquake Map")
+# st.subheader("Earthquake Map")
 
 ########### MAIN APP ###########
 # Extracting main information (location (latitde & longitude), magnitude)
@@ -166,3 +163,5 @@ html_string = m._repr_html_()
 
 # Display the HTML string using Streamlit
 st.components.v1.html(html_string, width=1000, height=600)
+
+st.write("ʕ •ᴥ•ʔ : Dont forget to star ⭐ this project on [GitHub.com/IndigoWizard/QuakeEye](https://github.com/IndigoWizard/QuakeEye/stargazers)")

@@ -6,11 +6,12 @@ st_css="""
     background: rgb(14, 17, 23);
   }*/
   .css-k1ih3n{
-      padding: 2rem 1rem 5rem;
+      padding: 1.8rem 3.5rem 1rem;
   }
   /*Sidebar*/
   .css-1vencpc {
       width: 20vw !important;
+      max-width: 20vw !important;
       background: #0e243c;
   }
   .css-1vq4p4l{
