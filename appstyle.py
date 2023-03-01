@@ -1,7 +1,7 @@
 st_css="""
-    <head>
-        <title>QuakeEye - Earthquake Data Visualization</title>
-    </head>
+    <body>
+        <img src="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif" alt="thumbnail" hidden="true">
+    </body>
   <style>
   /*Main app page*/
   /* main page
