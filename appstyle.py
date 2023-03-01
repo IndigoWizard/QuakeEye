@@ -1,6 +1,6 @@
 st_css="""
     <body>
-        <img src="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif" alt="thumbnail" hidden="true">
+        <img src="https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif" alt="thumbnail">
     </body>
   <style>
   /*Main app page*/
@@ -10,6 +10,9 @@ st_css="""
   }*/
   .css-k1ih3n{
       padding: 2rem 1rem 5rem;
+  }
+  img {
+    width: 1px;
   }
   /*Sidebar*/
   .css-1vencpc {
