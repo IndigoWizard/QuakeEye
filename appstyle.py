@@ -15,7 +15,7 @@ st_css="""
       background: #0e243c;
   }
   .css-1vq4p4l{
-      padding: 2rem 1rem;
+      padding: 1rem;
   }
   .css-5m2qup{
     gap: 1.2rem;

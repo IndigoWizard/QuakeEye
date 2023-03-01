@@ -60,6 +60,8 @@ with c2:
 with c3:
     st.info("[![Medium](https://miro.medium.com/1*m-R_BkNf1Qjr1YbyOIJY2w.png)](https://medium.com/@Indigo.Wizard/mt-chenoua-forest-fires-analysis-with-remote-sensing-614681f468e9)")
 
+st.sidebar.caption("ʕ •ᴥ•ʔ : Dont forget to star ⭐ this project on [GitHub.com/IndigoWizard/QuakeEye](https://github.com/IndigoWizard/QuakeEye/stargazers)")
+
 # App custom CSS
 st.markdown(appstyle.st_css,unsafe_allow_html=True,)
 
@@ -164,4 +166,3 @@ html_string = m._repr_html_()
 # Display the HTML string using Streamlit
 st.components.v1.html(html_string, width=1000, height=600)
 
-st.write("ʕ •ᴥ•ʔ : Dont forget to star ⭐ this project on [GitHub.com/IndigoWizard/QuakeEye](https://github.com/IndigoWizard/QuakeEye/stargazers)")
