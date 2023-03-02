@@ -17,11 +17,11 @@ QuakeEye is a Real-Time Earthquake Data Visualization project built using Folium
 
 ## App
 
-The app exist in two forms;
+This is the Streamlit app. The app exists in two forms;
 
 **Streamlit app:** The Strealit app, it lives in the `streamlit-app branch`, it is deployed on Streamlit Community Cloud and accessible at: <https://quakeeye.streamlit.app/>
 
-**Folium app:** A python script to render the Folium map as an HTML file that lives in the project's GitHub Page, built from `main branch`: <https://indigowizard.github.io/QuakeEye/map.html>
+**Folium app:** A python script to render the Folium map as an HTML file that lives in the project's GitHub Page, built from `folium-app branch`: <https://indigowizard.github.io/QuakeEye/>
 
 ## Description
 
@@ -53,6 +53,10 @@ Install the required packages by running the following command in your terminal:
 To start the QuakeEye app, run the following command in your terminal:
 
 `streamlit run app.py`
+
+Or:
+
+`python map.py`
 
 ## Features
 
