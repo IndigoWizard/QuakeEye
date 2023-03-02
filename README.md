@@ -1,13 +1,12 @@
 # QuakeEye
 
-QuakeEye is a Real-Time Earthquake Data Visualization project.
+QuakeEye is a Real-Time Earthquake Data Visualization project built using Folium and Streamlit and USGS API.
 
 **Consider starring the project ʕ •ᴥ•ʔ ... ʕ　·ᴥ·ʔ**
 
-**Link:** <https://indigowizard.github.io/QuakeEye/map.html>
-
 ## Table of Contents
 
+- [App](#app)
 - [Description](#description)
 - [Info](#info)
 - [Usage](#usage)
@@ -16,35 +15,55 @@ QuakeEye is a Real-Time Earthquake Data Visualization project.
 - [Contributing](#contributing)
 - [Credit](#credit)
 
+## App
+This is the Folium app. The app exists in two forms;
+
+**Streamlit app:** The Strealit app, it lives in the `streamlit-app branch`, it is deployed on Streamlit Community Cloud and accessible at: <https://quakeeye.streamlit.app/>
+
+**Folium app:** A python script to render the Folium map as an HTML file that lives in the project's GitHub Page, built from `folium-app branch`: <https://indigowizard.github.io/QuakeEye/>
+
 ## Description
 
 QuakeEye is a data visualization project that displays real-time earthquake data from the USGS API using an interactive map. The project is designed to provide users with an easy-to-use interface for exploring earthquake data on a global scale.
 
 ## Info
 
-This project was developed in the wake of the recent unfortunate events of the earthquakes that hit Türkiye and Suyria during the month of February 2023, therefore the map is zoomed on the region of Türkiye and Suyria common border.
+This project was developed in the wake of the recent unfortunate events of the earthquakes that hit Türkiye and Syria during the month of February 2023, therefore the map is zoomed on the region of Türkiye and Syria common border.
 
 You can zoom-out for a global view of earthquakes around the globe.
 
 ## Preview
 
-![quakeeye_demo_preview](https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif)
+![quakeeye_folium](https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif)
 
 ## Usage
 
-This app requires Python `3.6` and newer and `Folium` package.
+This app requires Python 3.6 and newer and the following packages:
 
-To start the QuakeEye application, run the following command in your terminal:
+- `folium`
+- `streamlit`
 
-`python app.py`
+Or:
+
+Install the required packages by running the following command in your terminal:
+
+`conda install --file requirements.txt`
+
+To start the QuakeEye app, run the following command in your terminal:
+
+`python map.py`
+
+Or: 
+
+`streamlit run app.py`
 
 ## Features
 
 - Interactive map displaying earthquake data
 - Real-time updates from the USGS API
-- Heatmap of earthquake geolocation distribution
+- Heatmap of earthquake frequency magnitude distribution
 - Marker layers for different categories of earthquakes based on their magnitudes (Richter scale)
-- PopUp info on individual earthquake markers; Magnitude, Date and Time, Location address and Coordinates
+- PopUp info on individual earthquake markers; *Magnitude, Date and Time, Location address and Coordinates*
 - Dark / Light Theme Basemaps
 
 ## Contributing
