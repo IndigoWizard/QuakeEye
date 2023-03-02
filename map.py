@@ -1,12 +1,11 @@
-import streamlit as st
 import folium
 from folium.plugins import HeatMap
 from folium.plugins import GroupedLayerControl
 from branca.element import Template, MacroElement
 import requests
 from datetime import datetime
-# my custom css
 import appstyle
+import webbrowser
 
 # Earthquake data GeoJSON URL:
 url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson"
@@ -17,66 +16,10 @@ try:
     response.raise_for_status()
     data = response.json()
 except requests.exceptions.RequestException as expt:
-    st.error("Error: Could not retrieve data from API")
-    st.error("details: ", +str(expt))
-    st.stop()
+    print("Error: Could not retrieve data from API")
+    print("details: ", expt)
+    exit(1)
 
-st.set_page_config(
-    page_title="QuakeEye",
-    page_icon="https://cdn-icons-png.flaticon.com/512/2377/2377860.png",
-    layout="wide",
-    initial_sidebar_state="expanded",
-    menu_items={
-    'Get help': "https://github.com/IndigoWizard/QuakeEye",
-    'Report a bug': "https://github.com/IndigoWizard/QuakeEye/issues",
-    'About': "# This is a header. This is an *extremely* cool app!"
-    }
-)
-
-########### SIDEBAR  MENU ########### 
-# Set up the sidebar
-st.sidebar.title("Navigation")
-
-# Project summary section
-st.sidebar.subheader("Project Summary")
-st.sidebar.success("Real-Time Earthquake Data Visualization App.")
-
-# About section
-st.sidebar.subheader("About me:")
-st.sidebar.caption("**Ahmed I. Mokhtari (IndigoWizard):** <br> Tech & Open Source enthusiast | Geo Environment & Spatial Planning | Maps & Cartography | Remote Sensing & Geospatial Analysis | Indie Game Dev | House of M.",
-    unsafe_allow_html=True)
-
-# Contact section
-st.sidebar.subheader("Find me at:")
-
-## Define columns in the sidebar
-c1, c2, c3 = st.sidebar.columns([1, 1, 1])
-
-# Display info in the columns
-with c1:
-    st.info("[![LinkedIn](https://static.licdn.com/sc/h/8s162nmbcnfkg7a0k8nq9wwqo)](https://linkedin.com/in/ahmed-islem-mokhtari)")
-with c2:
-    st.info("[![GitHub](https://github.githubassets.com/favicons/favicon-dark.png)](https://github.com/IndigoWizard)")
-with c3:
-    st.info("[![Medium](https://miro.medium.com/1*m-R_BkNf1Qjr1YbyOIJY2w.png)](https://medium.com/@Indigo.Wizard/mt-chenoua-forest-fires-analysis-with-remote-sensing-614681f468e9)")
-
-st.sidebar.caption("ʕ •ᴥ•ʔ : Dont forget to star ⭐ this project on [GitHub.com/IndigoWizard/QuakeEye](https://github.com/IndigoWizard/QuakeEye/stargazers)")
-
-# App custom CSS
-st.markdown(appstyle.st_css,unsafe_allow_html=True,)
-
-########### MAIN PAGE CONTENT ###########
-# App title
-# Add a title to your Streamlit app
-st.subheader("QuakeEye - Real-Time Earthquake Data Visualization")
-
-# Add a description of your Streamlit app
-st.write("This app visualizes the latest earthquake data from [USGS](https://www.usgs.gov/) in real-time. The app retrieves earthquake data from the USGS API and displays the data on a map using the [Folium](https://python-visualization.github.io/folium/) library and is deployed using [Streamlit](https://streamlit.io/).")
-st.write("Users can filter and explore earthquake data by magnitude, location and frequency magnitude distribution.")
-
-# st.subheader("Earthquake Map")
-
-########### MAIN APP ###########
 # Extracting main information (location (latitde & longitude), magnitude)
 places = [feature["properties"]["place"] for feature in data ["features"]]
 magnitudes = [feature["properties"]["mag"] for feature in data ["features"]]
@@ -158,9 +101,6 @@ GroupedLayerControl(
     collapsed=False
 ).add_to(m)
 
-# Display the map using streamlit-folium
-html_string = m._repr_html_()
-
-# Display the HTML string using Streamlit
-st.components.v1.html(html_string, width=1000, height=600)
-
+# saving the map as html and opening it in default browser
+m.save("index.html")
+webbrowser.open("index.html")
