@@ -20,6 +20,10 @@ st_css="""
   .css-5m2qup{
     gap: 1.2rem;
   }
+  #contribute {
+    width: 20px;
+  }
+
   </style>
 """
 
