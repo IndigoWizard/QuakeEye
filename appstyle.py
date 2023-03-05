@@ -6,16 +6,28 @@ st_css="""
     background: rgb(14, 17, 23);
   }*/
   .css-k1ih3n{
-      padding: 1.8rem 3.5rem 1rem;
+    padding-top: 0 !important;
+    top: -20px;
   }
+  .css-1avcm0n.e8zbici2 {
+    height:0 !important;
+    background: none;
+  }
+  .css-14xtw13.e8zbici0 .css-1rs6os.edgvbvh3 {
+    margin-right: 20px !important;
+  }
+  .css-k1ih3n{
+    padding: 1.8rem 3.5rem 1rem !important;
+  }
+
   /*Sidebar*/
   .css-1vencpc {
-      width: 20vw !important;
-      max-width: 20vw !important;
-      background: #0e243c;
+    width: 20vw !important;
+    max-width: 20vw !important;
+    background: #0e243c;
   }
   .css-1vq4p4l{
-      padding: 1rem;
+    padding: 1rem;
   }
   .css-5m2qup{
     gap: 1.2rem;
