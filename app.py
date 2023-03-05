@@ -4,7 +4,7 @@ from folium.plugins import HeatMap
 from folium.plugins import GroupedLayerControl
 from branca.element import Template, MacroElement
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 # my custom css
 import appstyle
 
@@ -72,7 +72,7 @@ st.subheader("QuakeEye - Real-Time Earthquake Data Visualization")
 
 # Add a description of your Streamlit app
 st.write("This app visualizes the latest earthquake data from [USGS](https://www.usgs.gov/) in real-time. The app retrieves earthquake data from the USGS API and displays the data on a map using the [Folium](https://python-visualization.github.io/folium/) library and is deployed using [Streamlit](https://streamlit.io/).")
-st.write("Users can filter and explore earthquake data by magnitude, location and frequency magnitude distribution.")
+st.write("Users can filter and explore earthquake data by magnitude, frequency magnitude distribution and time range.")
 
 # st.subheader("Earthquake Map")
 
@@ -84,9 +84,6 @@ times = [feature["properties"]["time"] for feature in data ["features"]]
 longs = [feature["geometry"]["coordinates"][0] for feature in data ["features"]]
 lats = [feature["geometry"]["coordinates"][1] for feature in data ["features"]]
 
-# Making a coordinates list
-coords = [[lat, lon, mag] for lat, lon, mag in zip(lats, longs, magnitudes)]
-
 # Main project folium map
 m = folium.Map(location=[36.5, 37.5], tiles=None, zoom_start=3)
 
@@ -94,11 +91,24 @@ m = folium.Map(location=[36.5, 37.5], tiles=None, zoom_start=3)
 basemap0 = folium.TileLayer("cartodbdark_matter", name="Dark Theme Basemap").add_to(m)
 basemap1 = folium.TileLayer("openstreetmap", name="Open Street Map").add_to(m)
 
+### Frequency Magnitude Distribution Heatmap
+# Making a coordinates list
+coords = [[lat, lon, mag] for lat, lon, mag in zip(lats, longs, magnitudes)]
+
 # Defning a color ramp for the heat map
 colors = {0.2: '#0f0b75', 0.45: '#9e189c', 0.75: '#ed7c50', 1: '#f4ee27'}
 
 # Adding the folium heatmap layer using the HeatMap plugin
 heatmap = HeatMap(data=coords, gradient=colors, name="Earthquake Distribution Heatmap").add_to(m)
+
+# Date range input (10 days delta)
+col1, col2 = st.columns(2)
+start_date = col1.date_input("Start date", datetime.now() - timedelta(days=10))
+end_date = col2.date_input("End date", datetime.now())
+
+# storing start & end dates as datetime objects
+start_datetime = datetime.combine(start_date, datetime.min.time())
+end_datetime = datetime.combine(end_date, datetime.max.time())
 
 # Earthquake Marker layers
 # Making a main earthquake layers group to enable/disable all the layers at once from the defaul layer panel
@@ -124,26 +134,27 @@ m.get_root().add_child(style)
 
 # Adding Markers to layers based on earthquake magnitude
 for place, mag, time, lat, lon  in zip(places, magnitudes, times, lats, longs):
-    
-    # converting API earthquake time info from unix time to human-readable time format
-    time_date = datetime.fromtimestamp(time/1000.0).strftime("%Y-%m-%d") 
-    time_hour = datetime.fromtimestamp(time/1000.0).strftime("%H:%M:%S") 
-    # Configure data display in popups when clicking on markers <span></span>
-    popup_info = f"<div class='popinfo'><h5><b>Earthquake Information</b></h5><b>Magnitude:</b> <span>{mag}</span><br><b>Date:</b> <span>{time_date}</span><br><b>Time:</b> <span>{time_hour}</span><br><b>Location:</b> <span>{place}</span><br><b>Coordinates:</b> <span>{lat} , {lon}</span></div>"
 
-    if mag <= 3.9:
-        folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="beige")).add_to(minor_layer)
-    elif mag <= 4.9:
-        folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="orange")).add_to(light_layer)
-    elif mag <= 5.9:
-        folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="lightred")).add_to(moderate_layer)
-    elif mag <= 6.9:
-        folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="red")).add_to(strong_layer)
-    elif mag <= 7.9:
-        folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="darkred")).add_to(major_layer)
-    else:
-        folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="black")).add_to(great_layer)
-    
+    # Configure data display in popups when clicking on markers <span></span>
+    date_time = datetime.fromtimestamp(time/1000)
+    if start_datetime <= date_time <= end_datetime:
+        time_date = date_time.strftime("%Y-%m-%d")
+        time_hour = date_time.strftime("%H:%M:%S")
+
+        popup_info = f"<div class='popinfo'><h5><b>Earthquake Information</b></h5><b>Magnitude:</b> <span>{mag}</span><br><b>Date:</b> <span>{time_date}</span><br><b>Time:</b> <span>{time_hour}</span><br><b>Location:</b> <span>{place}</span><br><b>Coordinates:</b> <span>{lat} , {lon}</span></div>"
+
+        if mag <= 3.9:
+            folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="beige")).add_to(minor_layer)
+        elif mag <= 4.9:
+            folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="orange")).add_to(light_layer)
+        elif mag <= 5.9:
+            folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="lightred")).add_to(moderate_layer)
+        elif mag <= 6.9:
+            folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="red")).add_to(strong_layer)
+        elif mag <= 7.9:
+            folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="darkred")).add_to(major_layer)
+        else:
+            folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="black")).add_to(great_layer)
 
 # Adding the layer control
 folium.LayerControl(collapsed=False).add_to(m)
