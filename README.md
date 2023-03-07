@@ -35,7 +35,7 @@ You can zoom-out for a global view of earthquakes around the globe.
 
 ## Preview
 
-![quakeeye_folium](https://user-images.githubusercontent.com/43890965/221388610-ab938380-7c0f-46bc-be71-6ee2031cb6bb.gif)
+![ezgif com-gif-maker_qe](https://user-images.githubusercontent.com/43890965/223300592-0cd3e930-d10f-4699-b124-8cfa212ca80f.gif)
 
 ## Usage
 
