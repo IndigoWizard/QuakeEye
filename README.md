@@ -2,7 +2,7 @@
 
 QuakeEye is a Real-Time Earthquake Data Visualization project built using Folium and Streamlit and USGS API.
 
-**Consider starring the project ʕ •ᴥ•ʔ ... ʕ　·ᴥ·ʔ**
+**Consider starring ⭐ the project ʕ •ᴥ•ʔ ... ʕ　·ᴥ·ʔ**
 
 ## Table of Contents
 
@@ -17,11 +17,11 @@ QuakeEye is a Real-Time Earthquake Data Visualization project built using Folium
 
 ## App
 
-This is the Streamlit app. The app exists in two forms;
+This is the Streamlit app. The app exists in two forms:
 
-**Streamlit app:** The Strealit app, it lives in the `streamlit-app branch`, it is deployed on Streamlit Community Cloud and accessible at: <https://quakeeye.streamlit.app/>
+**Streamlit app:** The Streamlit app lives in the `streamlit-app branch`, is deployed on the Streamlit Community Cloud, and is accessible at: <https://quakeye.streamlit.app/>
 
-**Folium app:** A python script to render the Folium map as an HTML file that lives in the project's GitHub Page, built from `folium-app branch`: <https://indigowizard.github.io/QuakeEye/>
+**Folium app:** A Python script to render the Folium map as an HTML file that lives in the project's GitHub Page, built from the `folium-app branch`: <https://indigowizard.github.io/QuakeEye/>
 
 ## Description
 
@@ -29,9 +29,9 @@ QuakeEye is a data visualization project that displays real-time earthquake data
 
 ## Info
 
-This project was developed in the wake of the recent unfortunate events of the earthquakes that hit Türkiye and Syria during the month of February 2023, therefore the map is zoomed on the region of Türkiye and Syria common border.
+This project was developed in the wake of the recent unfortunate events of the earthquakes that hit Türkiye and Syria during the month of February 2023; therefore, the map is zoomed in on the region of Türkiye and Syria's common border.
 
-You can zoom-out for a global view of earthquakes around the globe.
+You can zoom out for a global view of earthquakes around the globe.
 
 ## Preview
 
