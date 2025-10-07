@@ -11,6 +11,7 @@ from folium.plugins import GroupedLayerControl
 from streamlit_folium import folium_static
 import requests
 from datetime import datetime, date
+import pandas as pd
 
 st.set_page_config(
     page_title="QuakeEye",
@@ -353,6 +354,72 @@ def main():
 
     # Display the map
     folium_static(m)
+
+    # --- Earthquake Statistics Panel (Lightweight Pandas Block) ---
+    # Build dataframe from filtered markers only
+    filtered_data = []
+    for place, mag, time_ms, lat, lon in zip(places, magnitudes, times, lats, longs):
+        if mag is None:
+            continue
+        event_dt = datetime.fromtimestamp(time_ms / 1000)
+        event_date = event_dt.date()
+        if start_date <= event_date <= end_date and mag <= magnitude_limit:
+            filtered_data.append({
+                "place": place,
+                "magnitude": mag,
+                "time": event_dt,
+                "lat": lat,
+                "lon": lon
+            })
+
+    if filtered_data:
+        df = pd.DataFrame(filtered_data)
+
+        total_quakes = len(df)
+        avg_mag = round(df["magnitude"].mean(), 2)
+        max_mag = df["magnitude"].max()
+        strongest = df.loc[df["magnitude"].idxmax()]
+
+        # Display stats in three neat columns
+        st.markdown("### Summary Data Statistics")
+        col_a, col_b, col_c = st.columns(3)
+        with col_a:
+            st.markdown("##### Total Earthquakes")
+            st.markdown(f"#### {total_quakes}")
+        with col_b:
+            st.markdown("##### Average Magnitude")
+            st.markdown(f"#### {avg_mag}")
+        with col_c:
+            # st.metric("Strongest Event", f"{max_mag} ({strongest['place'][:50] + '...' if len(strongest['place'])>50 else strongest['place']})")
+            st.markdown("##### Strongest Recorded Earthquake")
+            st.info(
+                f"**{strongest['place']}** — Magnitude **{max_mag}**, occurred on "
+                f"{strongest['time'].strftime('%Y-%m-%d %H:%M:%S UTC')} "
+                f"at coordinates ({strongest['lat']:.2f}, {strongest['lon']:.2f})."
+            )
+    else:
+        st.info("No earthquakes found for the selected range.")
+
+    # --- Histogram of Magnitudes ---
+    st.markdown("### Magnitude Distribution")
+
+    # Filtered magnitudes for histogram
+    filtered_mags = [
+        mag for mag, time_ms in zip(magnitudes, times)
+        if mag is not None and start_date <= datetime.fromtimestamp(time_ms / 1000).date() <= end_date and mag <= magnitude_limit
+    ]
+
+    if filtered_mags:
+        # Create histogram bins (0–10, step=1)
+        bins = list(range(0, 11))
+        freq = [sum(1 for m in filtered_mags if i <= m < i + 1) for i in bins]
+
+        # Prepare data for st.bar_chart
+        chart_data = {"Magnitude": [f"{i}-{i+1}" for i in bins], "Count": freq}
+        st.bar_chart(data=chart_data, x="Magnitude", y="Count", use_container_width=True)
+    else:
+        st.info("No earthquakes match the current filters.")
+
 
     # Custom CSS fix
     st.markdown(
