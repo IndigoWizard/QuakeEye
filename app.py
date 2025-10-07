@@ -1,25 +1,16 @@
+"""
+Original Project Author: IndigoWizard, Feb 18, 2023.
+Project Name: QuakeEye
+License: GPL-3.0 (See LICENSE file for details)
+"""
+
 import streamlit as st
 import folium
 from folium.plugins import HeatMap
 from folium.plugins import GroupedLayerControl
-from branca.element import Template, MacroElement
+from streamlit_folium import folium_static
 import requests
-from datetime import datetime, timedelta
-# my custom css
-import appstyle
-
-# Earthquake data GeoJSON URL:
-url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson"
-
-# Getting the earthquake data
-try:
-    response = requests.get(url)
-    response.raise_for_status()
-    data = response.json()
-except requests.exceptions.RequestException as expt:
-    st.error("Error: Could not retrieve data from API")
-    st.error("details: ", +str(expt))
-    st.stop()
+from datetime import datetime, date
 
 st.set_page_config(
     page_title="QuakeEye",
@@ -29,156 +20,351 @@ st.set_page_config(
     menu_items={
     'Get help': "https://github.com/IndigoWizard/QuakeEye",
     'Report a bug': "https://github.com/IndigoWizard/QuakeEye/issues",
-    'About': "# This is a header. This is an *extremely* cool app!"
+    'About': """
+            Original Project Author: IndigoWizard, Feb 18, 2023.
+            
+            Project Name: QuakeEye.
+
+            License: GPL-3.0 (See LICENSE file for details).
+            """
     }
 )
 
-########### SIDEBAR  MENU ########### 
-# Set up the sidebar
-st.sidebar.title("Navigation")
+### CSS STYLING 
+st.markdown(
+"""
+<style>
+    /* Header*/
+    /* Dark theme version */
+    .st-emotion-cache-h4xjwg, .st-emotion-cache-12fmjuu {
+        height: 1rem;
+        background: none;
+    }
+    /*Header banner*/
+    .st-emotion-cache-ropwps.egexzqm2 h1#wildfire-burn-severity-analysis {
+        font-size: 1.75rem;
+    }
 
-# Project summary section
-st.sidebar.subheader("Project Summary")
-st.sidebar.success("Real-Time Earthquake Data Visualization App.")
+    /*Main: Smooth scrolling*/
+    .stMain.st-emotion-cache-bm2z3a.eht7o1d1 {
+        scroll-behavior: smooth;
+    }
+    
+    /* main app body with less padding*/
+    .st-emotion-cache-t1wise.eht7o1d4 {
+        padding: 0.2rem 2rem;
+    }
 
-# About section
-st.sidebar.subheader("About me:")
-st.sidebar.caption("**Ahmed I. Mokhtari (IndigoWizard):** <br> Tech & Open Source enthusiast | Geo Environment & Spatial Planning | Maps & Cartography | Remote Sensing & Geospatial Analysis | Indie Game Dev | House of M.",
-    unsafe_allow_html=True)
+    /* main app body with less padding in different screen size*/
+    @media (min-width: calc(736px + 8rem)) {
+        .st-emotion-cache-t1wise {
+            padding: 0.2rem 2rem;
+        }
+    }
 
-# Contact section
-st.sidebar.subheader("Find me at:")
+    /* ******* Sidebar ******* */
+    /* Main container */
+    /*Dark theme - Light theme class names*/
+    .stSidebar.st-emotion-cache-1wqrzgl.e1c29vlm0, .stSidebar.st-emotion-cache-vmpjyt.e1c29vlm0 {
+        min-width: 280px;
+        max-width: fit-content;
+    }
 
-## Define columns in the sidebar
-c1, c2, c3 = st.sidebar.columns([1, 1, 1])
+    /*Light theme sidbar background color*/
+    .stSidebar.st-emotion-cache-vmpjyt, .stSidebar.st-emotion-cache-wgfafi.e1c29vlm0 {
+        background-color: rgb(38, 39, 48);
+        color: #fafafa;
+    }
+    /*sidebar light theme mobile view*/
 
-# Display info in the columns
-with c1:
-    st.info("[![LinkedIn](https://static.licdn.com/sc/h/8s162nmbcnfkg7a0k8nq9wwqo)](https://linkedin.com/in/ahmed-islem-mokhtari)")
-with c2:
-    st.info("[![GitHub](https://github.githubassets.com/favicons/favicon-dark.png)](https://github.com/IndigoWizard)")
-with c3:
-    st.info("[![Medium](https://miro.medium.com/1*m-R_BkNf1Qjr1YbyOIJY2w.png)](https://medium.com/@Indigo.Wizard/mt-chenoua-forest-fires-analysis-with-remote-sensing-614681f468e9)")
+    @media (max-width: 576px) {
+        .stSidebar.st-emotion-cache-g8bi16.e1c29vlm0 {
+            background-color: rgb(38, 39, 48);
+            color: #fafafa;
+        }
+        .stVerticalBlock.st-emotion-cache-10e86g4.e6rk8up3, .stVerticalBlock.st-emotion-cache-1vn87qs.e6rk8up3 {
+            gap: 1.6rem;
+        }
+    }
 
-st.sidebar.caption("ʕ •ᴥ•ʔ : Dont forget to star ⭐ this project on [GitHub.com/IndigoWizard/QuakeEye](https://github.com/IndigoWizard/QuakeEye/stargazers)")
 
-# App custom CSS
-st.markdown(appstyle.st_css,unsafe_allow_html=True,)
+    /*Sidebar header*/
+    .st-emotion-cache-kgpedg {
+        padding: 0;
+    }
+    .st-emotion-cache-1mi2ry5.eczjsme6 {
+        height: 0;
+    }
 
-########### MAIN PAGE CONTENT ###########
-# App title
-# Add a title to your Streamlit app
-st.subheader("QuakeEye - Real-Time Earthquake Data Visualization")
+    /* Logo */
+    .st-emotion-cache-1kyxreq.e115fcil2 {
+        justify-content: center;
+    }
 
-# Add a description of your Streamlit app
-st.write("This app visualizes the latest earthquake data from [USGS](https://www.usgs.gov/) in real-time. The app retrieves earthquake data from the USGS API and displays the data on a map using the [Folium](https://python-visualization.github.io/folium/) library and is deployed using [Streamlit](https://streamlit.io/).")
-st.write("Users can filter and explore earthquake data by magnitude, frequency magnitude distribution and time range.")
+    /* Sidebar : inside container */
+    .css-ge7e53 {
+        width: fit-content;
+    }
 
-# st.subheader("Earthquake Map")
+    /*Sidebar : image*/
+    .st-emotion-cache-vew1uq.e6rk8up1 {
+        display: flex;
+        justify-content: center;
+    }
 
-########### MAIN APP ###########
-# Extracting main information (location (latitde & longitude), magnitude)
-places = [feature["properties"]["place"] for feature in data ["features"]]
-magnitudes = [feature["properties"]["mag"] for feature in data ["features"]]
-times = [feature["properties"]["time"] for feature in data ["features"]] 
-longs = [feature["geometry"]["coordinates"][0] for feature in data ["features"]]
-lats = [feature["geometry"]["coordinates"][1] for feature in data ["features"]]
+    /*Sidebar : Navigation list*/
+    div.element-container:nth-child(4) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(1) {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    div.element-container:nth-child(4) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(1) > li {
+        padding: 0;
+        margin: 0;
+        padding: 0;
+        font-weight: 600;
+    }
+    div.element-container:nth-child(4) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(1) > li > a {
+        text-decoration: none;
+        transition: 0.2s ease-in-out;
+        padding-inline: 10px;
+    }
+    
+    div.element-container:nth-child(4) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(1) > li > a:hover {
+        color: rgb(46, 206, 255);
+        transition: 0.2s ease-in-out;
+        background: #131720;
+        border-radius: 4px;
+    }
+    
+    /* Sidebar: socials*/
+    div.css-rklnmr:nth-child(6) > div:nth-child(1) > div:nth-child(1) > p {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+    }
 
-# Main project folium map
-m = folium.Map(location=[36.5, 37.5], tiles=None, zoom_start=3)
+    /*Socials flex properties: dark & light theme*/
+    .st-emotion-cache-1espb9k p, .st-emotion-cache-1mw54nq p {
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        gap: 0.8rem;
+        padding-inline: 10px;
+    }
+    
+    /* Linkedin logo*/
+    .st-emotion-cache-1espb9k.egexzqm0 p a img, .st-emotion-cache-1mw54nq.egexzqm0 p a img {
+        width: 32px;
+    }
 
-#Primary basemaps
-basemap0 = folium.TileLayer("cartodbdark_matter", name="Dark Theme Basemap").add_to(m)
-basemap1 = folium.TileLayer("openstreetmap", name="Open Street Map").add_to(m)
+    /*GitHub logo:  Dark Theme - Light Theme*/
+    .st-emotion-cache-14j6x93:nth-child(6) > div:nth-child(1) > div:nth-child(1) > p:nth-child(1) > a:nth-child(2) > img:nth-child(1) {
+        background-color: #26273040;
+        border-radius: 50%;
+    }
+    /*GitHub logo:  Dark Theme - Light Theme - Mobile version*/
+    div.st-emotion-cache-vew1uq:nth-child(6) > div:nth-child(1) > div:nth-child(1) > p:nth-child(1) > a:nth-child(2) > img:nth-child(1) {
+        background-color: #26273040;
+        border-radius: 50%;
+    }
 
-### Frequency Magnitude Distribution Heatmap
-# Making a coordinates list
-coords = [[lat, lon, mag] for lat, lon, mag in zip(lats, longs, magnitudes)]
+    /*Main body Title*/
+    .st-emotion-cache-ropwps.egexzqm2 h1#wildfire-burn-severity-analysis, .st-emotion-cache-18netey.egexzqm2 h1#Earthquake-Visualization-Map {
+        font-size: 2rem;
+        padding: 1.8rem 0 0.5rem;
+    }
+    
 
-# Defning a color ramp for the heat map
-colors = {0.2: '#0f0b75', 0.45: '#9e189c', 0.75: '#ed7c50', 1: '#f4ee27'}
+    /* ******* Form Submit ******* */
+    /* ***** Generate Map */
+    /* Dark theme version */
+    .st-emotion-cache-19rxjzo.ef3psqc7 {
+        width: 100%;
+    }
+    /* Light Theme Version */
+    .st-emotion-cache-7ym5gk.ef3psqc7 {
+        width: 100%;
+        background: rgba(0, 3, 172, 0.25);
+    }
 
-# Adding the folium heatmap layer using the HeatMap plugin
-heatmap = HeatMap(data=coords, gradient=colors, name="Earthquake Distribution Heatmap").add_to(m)
+    /* Buttons */
+    /* Light theme verison; hober effect */
+    .st-emotion-cache-7ym5gk:hover {
+        border-color: rgb(255, 0, 110);
+        color: rgb(255, 0, 110);
+    }
 
-# Date range input (10 days delta)
-col1, col2 = st.columns(2)
-start_date = col1.date_input("Start date", datetime.now() - timedelta(days=10))
-end_date = col2.date_input("End date", datetime.now())
+</style>
+""", unsafe_allow_html=True)
 
-# storing start & end dates as datetime objects
-start_datetime = datetime.combine(start_date, datetime.min.time())
-end_datetime = datetime.combine(end_date, datetime.max.time())
+# USGS earthquake data url
+DATA_URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson"
 
-# Earthquake Marker layers
-# Making a main earthquake layers group to enable/disable all the layers at once from the defaul layer panel
-main_layer = folium.FeatureGroup("Earthquakes Location").add_to(m)
+# fetch earthquake GeoJSON data from USGS API
+def fetch_earthquake_data():
+    response = requests.get(DATA_URL)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        st.error("Failed to fetch earthquake data.")
+        return None
 
-# Earthquakes are split into categories based on their magnitudes
-# micro_layer = folium.FeatureGroup(name="Micro: Less than 2.9").add_to(main_layer)
-minor_layer = folium.FeatureGroup(name="Minor: Less than 3.9").add_to(main_layer)
-light_layer = folium.FeatureGroup(name="Light: 4.0 - 4.9").add_to(main_layer)
-moderate_layer = folium.FeatureGroup(name="Moderate: 5.0 - 5.9").add_to(main_layer)
-strong_layer = folium.FeatureGroup(name="Strong: 6.0 - 6.9").add_to(main_layer)
-major_layer = folium.FeatureGroup(name="Major: 7.0 - 7.9").add_to(main_layer)
-great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(main_layer)
 
-# Injecting custom css through branca macro elements and template
-app_css = appstyle.map_css
-# configuring the style
-style = MacroElement()
-style._template = Template(app_css)
+def main():
+    # sidebar
+    with st.sidebar:
+        st.logo(image="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQIW2NgAAIAAAUAAR4f7BQAAAAASUVORK5CYII=", link=None, icon_image="https://cdn-icons-png.flaticon.com/512/2377/2377860.png")
+        st.image("https://cdn-icons-png.flaticon.com/512/2377/2377860.png", width=90)
+        st.markdown("#### QuakeEye")
+        st.subheader("Navigation:")
+        st.markdown(
+            """
+                - [Earthquake](#earthquake)
+                - [Data](#data)
+                - [Credit](#credit)
+            """)
+    
+        st.subheader("Contact:")
+        st.markdown("[![LinkedIn](https://cdn-icons-png.flaticon.com/512/174/174857.png)](https://linkedin.com/in/ahmed-islem-mokhtari) [![GitHub](https://github.githubassets.com/favicons/favicon-dark.png)](https://github.com/IndigoWizard) [![Medium](https://miro.medium.com/1*m-R_BkNf1Qjr1YbyOIJY2w.png)](https://medium.com/@Indigo.Wizard/mt-chenoua-forest-fires-analysis-with-remote-sensing-614681f468e9)")
 
-# Adding style to the map
-m.get_root().add_child(style)
+    st.subheader("Earthquake Visualization Map")
 
-# Adding Markers to layers based on earthquake magnitude
-for place, mag, time, lat, lon  in zip(places, magnitudes, times, lats, longs):
+    # Fetch data
+    data = fetch_earthquake_data()
+    if not data:
+        return
 
-    # Configure data display in popups when clicking on markers <span></span>
-    date_time = datetime.fromtimestamp(time/1000)
-    if start_datetime <= date_time <= end_datetime:
-        time_date = date_time.strftime("%Y-%m-%d")
-        time_hour = date_time.strftime("%H:%M:%S")
+    # --- Layout ---
+    col1, col2, col3 = st.columns(3)
 
-        popup_info = f"<div class='popinfo'><h5><b>Earthquake Information</b></h5><b>Magnitude:</b> <span>{mag}</span><br><b>Date:</b> <span>{time_date}</span><br><b>Time:</b> <span>{time_hour}</span><br><b>Location:</b> <span>{place}</span><br><b>Coordinates:</b> <span>{lat} , {lon}</span></div>"
+    with col1:
+        start_date = st.date_input("Start Date", date(2025, 1, 1))
 
-        if mag <= 3.9:
-            folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="beige")).add_to(minor_layer)
-        elif mag <= 4.9:
-            folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="orange")).add_to(light_layer)
-        elif mag <= 5.9:
-            folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="lightred")).add_to(moderate_layer)
-        elif mag <= 6.9:
-            folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="red")).add_to(strong_layer)
-        elif mag <= 7.9:
-            folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="darkred")).add_to(major_layer)
-        else:
-            folium.Marker([lat, lon], popup=popup_info, icon=folium.Icon(color="black")).add_to(great_layer)
+    with col2:
+        end_date = st.date_input("End Date", date.today())
 
-# Adding the layer control
-folium.LayerControl(collapsed=False).add_to(m)
+    with col3:
+        magnitude_limit = st.slider("Magnitude", min_value=0, max_value=10, value=5, step=1)
 
-# Ctreating multiple magnitude layers based on Richter classification
-# Using GroupedLayerControl to stack the new layers under a one category and make them individually interactive
-GroupedLayerControl(
-    groups={
-    "Earthquake Classes by Magnitude": [minor_layer, light_layer, moderate_layer, strong_layer, major_layer, great_layer]
-    },
-    exclusive_groups=False,
-    collapsed=False
-).add_to(m)
+    # --- map initialization ---
+    m = folium.Map(location=[36.60, 16.00], zoom_start=3, tiles=None)
 
-# Display the map using streamlit-folium
-html_string = m._repr_html_()
+    # basemaps
+    basemap0 = folium.TileLayer("openstreetmap", name="Open Street Map", attr="OSM").add_to(m)
+    basemap1 = folium.TileLayer("cartodbdark_matter", name="Dark Theme Basemap", attr="CARTO").add_to(m)
 
-# Display the HTML string using Streamlit
-st.components.v1.html(html_string, width=1000, height=600)
+    # Extract main info
+    places = [f["properties"]["place"] for f in data["features"]]
+    magnitudes = [f["properties"]["mag"] for f in data["features"]]
+    times = [f["properties"]["time"] for f in data["features"]]
+    longs = [f["geometry"]["coordinates"][0] for f in data["features"]]
+    lats = [f["geometry"]["coordinates"][1] for f in data["features"]]
 
-st.write("## Contribute to the Project")
-st.write("You can help improve this project and contribute in many ways, such as:")
-st.write("- 🐛 Reporting bugs and issues")
-st.write("- ✨ Suggesting new features")
-st.write("- 🛠️ Improving the existing codebase")
-st.write("- 💬 Spreading the word and encouraging others to use the app")
-st.markdown("<div class='footer-info'>To learn more and get involved, visit the project <span><a href='https://github.com/IndigoWizard/QuakeEye/blob/streamlit-app/.github/CONTRIBUTING.md' target='_blank' rel='noopener noreferrer'>GitHub repository</a> <img src='https://github.githubassets.com/favicons/favicon-dark.png' alt='icon-github' id='contribute'></span></div>", unsafe_allow_html=True)
+    # Create coordinates list for HeatMap
+        # --- Create Dynamic, Magnitude-Weighted HeatMap ---
+    # Filter data first (so the heatmap updates based on user input)
+    filtered_coords = []
+    for mag, time_ms, lat, lon in zip(magnitudes, times, lats, longs):
+        if mag is None:
+            continue
+        event_dt = datetime.fromtimestamp(time_ms / 1000)
+        event_date = event_dt.date()
+        if start_date <= event_date <= end_date and mag <= magnitude_limit:
+            # Use magnitude as weight for intensity
+            # Squared magnitude exaggerates stronger quakes visually
+            filtered_coords.append([lat, lon, mag ** 2])
+
+    # Define color gradient
+    
+    colors = {0.2: '#0f0b75', 0.45: '#9e189c', 0.75: '#ed7c50', 1: '#f4ee27'}
+
+
+    # Only add heatmap if filtered data exists
+    if filtered_coords:
+        HeatMap(
+            data=filtered_coords,
+            gradient=colors,
+            name="Magnitude-Weighted Heatmap",
+            radius=20,
+            blur=15,
+            min_opacity=0.3,
+            max_zoom=6
+        ).add_to(m)
+
+
+    # Making a main earthquake layers group to enable/disable all the layers at once from the defaul layer panel
+    main_layer = folium.FeatureGroup("Earthquakes Location").add_to(m)
+
+    # Earthquakes are split into categories based on their magnitudes
+    # micro_layer = folium.FeatureGroup(name="Micro: Less than 2.9").add_to(main_layer)
+    minor_layer = folium.FeatureGroup(name="Minor: Less than 3.9").add_to(main_layer)
+    light_layer = folium.FeatureGroup(name="Light: 4.0 - 4.9").add_to(main_layer)
+    moderate_layer = folium.FeatureGroup(name="Moderate: 5.0 - 5.9").add_to(main_layer)
+    strong_layer = folium.FeatureGroup(name="Strong: 6.0 - 6.9").add_to(main_layer)
+    major_layer = folium.FeatureGroup(name="Major: 7.0 - 7.9").add_to(main_layer)
+    great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(main_layer)
+
+    # Add Markers based on filters
+    for place, mag, time_ms, lat, lon in zip(places, magnitudes, times, lats, longs):
+        if mag is None:
+            continue
+        event_dt = datetime.fromtimestamp(time_ms / 1000)
+        event_date = event_dt.date()
+
+        if start_date <= event_date <= end_date and mag <= magnitude_limit:
+            date_str = event_dt.strftime("%Y-%m-%d")
+            time_str = event_dt.strftime("%H:%M:%S")
+
+            popup_info = f"<div class='popinfo'><h5><b>Earthquake Information</b></h5><b>Magnitude:</b> <span>{mag}</span><br><b>Date:</b> <span>{date_str}</span><br><b>Time:</b> <span>{time_str}</span><br><b>Location:</b> <span>{place}</span><br><b>Coordinates:</b> <span>{lat} , {lon}</span></div>"
+
+            # Color by magnitude
+            if mag <= 3.9:
+                color = "beige"
+            elif mag <= 4.9:
+                color = "orange"
+            elif mag <= 5.9:
+                color = "lightred"
+            elif mag <= 6.9:
+                color = "red"
+            elif mag <= 7.9:
+                color = "darkred"
+            else:
+                color = "black"
+
+            folium.Marker(
+                [lat, lon],
+                popup=popup_info,
+                icon=folium.Icon(color=color)
+            ).add_to(main_layer)
+    
+
+    folium.plugins.Fullscreen(position="bottomright", title="Expand me", title_cancel="Exit me", force_separate_button=True).add_to(m)
+
+    folium.LayerControl(collapsed=True).add_to(m)
+
+    GroupedLayerControl(
+        groups={
+        "Earthquake Classes by Magnitude": [minor_layer, light_layer, moderate_layer, strong_layer, major_layer, great_layer]
+        },
+        exclusive_groups=False,
+        collapsed=False
+    ).add_to(m)
+
+    # Display the map
+    folium_static(m)
+
+    # Custom CSS fix
+    st.markdown(
+    """
+    <style>
+        /*Map iframe*/
+        iframe {
+            width: 100%;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+
+if __name__ == "__main__":
+    main()

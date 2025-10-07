@@ -17,11 +17,10 @@ QuakeEye is a Real-Time Earthquake Data Visualization project built using Folium
 
 ## App
 
-This is the Streamlit app. The app exists in two forms:
+This is the Streamlit app.
 
-**Streamlit app:** The Streamlit app lives in the `streamlit-app branch`, is deployed on the Streamlit Community Cloud, and is accessible at: <https://quakeye.streamlit.app/>
+**Streamlit app:** The Streamlit app lives in the `streamlit-app` branch, is deployed on the Streamlit Community Cloud, and is accessible at: <https://quakeye.streamlit.app/>
 
-**Folium app:** A Python script to render the Folium map as an HTML file that lives in the project's GitHub Page, built from the `folium-app branch`: <https://indigowizard.github.io/QuakeEye/>
 
 ## Description
 
@@ -39,13 +38,6 @@ You can zoom out for a global view of earthquakes around the globe.
 
 ## Usage
 
-This app requires Python 3.6 and newer and the following packages:
-
-- `folium`
-- `streamlit`
-
-Or:
-
 Install the required packages by running the following command in your terminal:
 
 `conda install --file requirements.txt`
@@ -54,9 +46,6 @@ To start the QuakeEye app, run the following command in your terminal:
 
 `streamlit run app.py`
 
-Or:
-
-`python map.py`
 
 ## Features
 
@@ -73,4 +62,4 @@ If you would like to contribute to QuakeEye, read the [contributing guidelines](
 
 ## Credit
 
--- Project by [Ahmed I. Mokhtari](https://www.linkedin.com/in/ahmed-islem-mokhtari/).
+Project by [IndigoWizard](https://github.com/IndigoWizard).
