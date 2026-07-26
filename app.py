@@ -153,6 +153,7 @@ st.markdown(custom_css, unsafe_allow_html=True)
 DATA_URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson"
 
 # fetch earthquake GeoJSON data from USGS API
+@st.cache_data(persist=True)
 def fetch_earthquake_data():
     response = requests.get(DATA_URL)
     if response.status_code == 200:
@@ -173,6 +174,8 @@ def main():
             """
                 - [Earthquake Map](#quake-eye-earthquake-visualization)
                 - [Stats Report](#summary-data-statistics)
+                - [Data](#data)
+                - [Credit](#credit)
             """
         )
         st.markdown("### Contact")
@@ -419,7 +422,7 @@ def main():
             folium.LayerControl(collapsed=True).add_to(m)
 
             # Display the map
-            st_folium(m, width="stretch", height="600")
+            st_folium(m, width="stretch", height="600", returned_objects=[])
 
     st.divider()
 
