@@ -490,6 +490,25 @@ def main():
         else:
             st.info("No earthquakes match the current filters.")
 
+    st.divider()
+
+    # data section
+    with st.container():
+        st.subheader("Data")
+        st.markdown(
+            """
+                This application uses earthquake data provided by the **U.S. Geological Survey (USGS) Earthquake Hazards Program**.
+
+                - **Data Source:** https://earthquake.usgs.gov/earthquakes/feed/
+                - **Dataset:** Earthquake GeoJSON Feeds
+                - **Feed Used:** M2.5+ Earthquakes, Past 30 Days
+                - **Format:** GeoJSON
+                - **License:** Public domain (U.S.G.S)
+
+                Data is retrieved directly from the USGS API each time the application is loaded.
+            
+            """
+        )
 
 if __name__ == "__main__":
     main()
