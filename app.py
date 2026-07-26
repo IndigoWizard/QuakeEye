@@ -7,7 +7,6 @@ License: GPL-3.0 (See LICENSE file for details)
 import streamlit as st
 import folium
 from folium.plugins import HeatMap
-from folium.plugins import GroupedLayerControl
 from streamlit_folium import st_folium
 from branca.element import Template, MacroElement, Figure, Element
 from folium.utilities import escape_backticks
@@ -371,15 +370,6 @@ def main():
             # Making a main earthquake layers group to enable/disable all the layers at once from the defaul layer panel
             main_layer = folium.FeatureGroup("Earthquakes Location").add_to(m)
 
-            # Earthquakes are split into categories based on their magnitudes
-            # micro_layer = folium.FeatureGroup(name="Micro: Less than 2.9").add_to(main_layer)
-            minor_layer = folium.FeatureGroup(name="Minor: Less than 3.9").add_to(main_layer)
-            light_layer = folium.FeatureGroup(name="Light: 4.0 - 4.9").add_to(main_layer)
-            moderate_layer = folium.FeatureGroup(name="Moderate: 5.0 - 5.9").add_to(main_layer)
-            strong_layer = folium.FeatureGroup(name="Strong: 6.0 - 6.9").add_to(main_layer)
-            major_layer = folium.FeatureGroup(name="Major: 7.0 - 7.9").add_to(main_layer)
-            great_layer = folium.FeatureGroup(name="Great: 8.0 and higher").add_to(main_layer)
-
             # Add Markers based on filters
             for place, mag, time_ms, lat, lon in zip(places, magnitudes, times, lats, longs):
                 if mag is None:
@@ -420,14 +410,6 @@ def main():
 
             ## layer control
             folium.LayerControl(collapsed=True).add_to(m)
-
-            GroupedLayerControl(
-                groups={
-                "Earthquake Classes by Magnitude": [minor_layer, light_layer, moderate_layer, strong_layer, major_layer, great_layer]
-                },
-                exclusive_groups=False,
-                collapsed=False
-            ).add_to(m)
 
             # Display the map
             st_folium(m, width="stretch", height="600")
