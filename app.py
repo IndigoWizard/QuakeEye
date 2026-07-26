@@ -11,7 +11,7 @@ from streamlit_folium import st_folium
 from branca.element import Template, MacroElement, Figure, Element
 from folium.utilities import escape_backticks
 import requests
-from datetime import datetime, date
+from datetime import datetime, timedelta, date
 import pandas as pd
 
 st.set_page_config(
@@ -205,17 +205,24 @@ def main():
     if not data:
         return
 
+    # map section
     with st.container():
         # --- Layout ---
         col1, col2 = st.columns([3,1])
 
-        with col2:
+        with col2:            
             st.info("Magnitude.")
             magnitude_limit = st.slider("Magnitude", min_value=0, max_value=10, value=5, step=1, label_visibility="collapsed")
+
+            # time range
+            today = datetime.today()
+            last_month = today - timedelta(days=30)
+
             st.warning("Start Date.")
-            start_date = st.date_input("Start Date", date(2025, 1, 1), label_visibility="collapsed")
+            start_date = st.date_input("Start Date", last_month, label_visibility="collapsed")
+            
             st.success("End Date.")
-            end_date = st.date_input("End Date", date.today(), label_visibility="collapsed")
+            end_date = st.date_input("End Date", today, label_visibility="collapsed")
 
         with col1:
             # --- map initialization ---
@@ -414,6 +421,9 @@ def main():
             # Display the map
             st_folium(m, width="stretch", height="600")
 
+    st.divider()
+
+    # stats section
     with st.container():
         # --- Earthquake Statistics Panel (Lightweight Pandas Block) ---
         # Build dataframe from filtered markers only
