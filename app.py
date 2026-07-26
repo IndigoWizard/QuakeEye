@@ -510,5 +510,13 @@ def main():
             """
         )
 
+    st.divider()
+
+    # credit section
+    with st.container():
+        st.subheader("Credit")
+        st.caption("""The app was developped by [IndigoWizard](https://github.com/IndigoWizard) using; [Streamlit](https://streamlit.io/), [USGS](https://github.com/google/earthengine-api), [Folium](https://github.com/python-visualization/folium) and [geemap](https://geemap.org/). Glob icon created by <a href="https://www.flaticon.com/packs/essentials-67" target="_blank" rel="noopener noreferrer" title="internet icons | Essentials Flat">Magnific - Flaticon</a>""", unsafe_allow_html=True)
+        
+
 if __name__ == "__main__":
     main()
