@@ -173,6 +173,8 @@ def main():
             """
                 - [Earthquake Map](#quake-eye-earthquake-visualization)
                 - [Stats Report](#summary-data-statistics)
+                - [Data](#data)
+                - [Credit](#credit)
             """
         )
         st.markdown("### Contact")
